@@ -75,7 +75,7 @@ namespace APDS9960 {
         let buf = pins.createBuffer(2);
         // basic.pause(10)
         // basic.pause(10)
-        buf[0] = command >> 16
+        buf[0] = command >> 8
         buf[1] = command & 0xFF
         return pins.i2cWriteBuffer(APDS9960_ADDRESS, buf)
     }
@@ -223,7 +223,7 @@ namespace APDS9960 {
         setReg(APDS9960_WTIME, 0xFF)
         setReg(APDS9960_PERS, 0)
         setReg(APDS9960_CONFIG1, 0X40)
-        //setReg(APDS9960_CONTROL,0)
+        setReg(APDS9960_CONTROL,0)
         basic.pause(3)
         ALSEnable()
         PowerOn()
