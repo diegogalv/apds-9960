@@ -92,8 +92,8 @@ namespace APDS9960 {
      * get two reg, UInt16LE format
      */
     function get2Reg(reg: number): number {
-        pins.i2cWriteNumber(APDS9960_ADDRESS, reg, NumberFormat.UInt8BE);
-        return pins.i2cReadNumber(APDS9960_ADDRESS, NumberFormat.UInt16LE);
+        //pins.i2cWriteNumber(APDS9960_ADDRESS, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(reg, NumberFormat.UInt16LE);
     }
 
     /**
