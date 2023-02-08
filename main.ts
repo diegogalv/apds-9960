@@ -126,7 +126,7 @@ namespace APDS9960 {
     //% weight=100 blockGap=8
     export function AGAIN(gain: APDS9960_AGAIN) {
         let t = getReg(APDS9960_CONTROL)
-        t &= 0x03
+        //t &= 0x03
         switch (gain) {
             case APDS9960_AGAIN.AGAIN_8:
                 t |= 1;
@@ -173,14 +173,15 @@ namespace APDS9960 {
     //% weight=120 blockGap=8
     export function ALSEnable(en: boolean = true) {
         let t = getReg(APDS9960_ENABLE)
-        t &= 0xFF
+        //t &= 0xFC
         if (en) t |= 2
         setReg(APDS9960_ENABLE, t)
     }
-
+    //% blockId="APDS9960_WAIT_ENABLE" block="wait Enable %en"
+    //% weight=120 blockGap=8
     export function WaitEnable(en: boolean = true) {
         let t = getReg(APDS9960_ENABLE)
-        t &= 0xF7
+        //t &= 0xF7
         if (en) t |= 5
         setReg(APDS9960_ENABLE, t)
     }
@@ -190,10 +191,10 @@ namespace APDS9960 {
     //% blockId="APDS9930_GET_ALS" block="get ALS"
     //% weight=201 blockGap=8
     export function getALS(): number {
-        let r = read8(APDS9960_RDATAL);
-        let g = read8(APDS9960_GDATAL);
-        let b = read8(APDS9960_BDATAL);
-        
+        let r = read16(APDS9960_RDATAL);
+        let g = read16(APDS9960_GDATAL);
+        let b = read16(APDS9960_BDATAL);
+        let c = read16(APDS9960_CDATAL);
         /* This only uses RGB ... how can we integrate clear or calculate lux */
         /* based exclusively on clear since this might be more reliable?      */
         let illuminance = (-0.32466 * r) + (1.57837 * g) + (-0.73191 * b);
