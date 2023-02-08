@@ -103,7 +103,7 @@ namespace APDS9960 {
         setReg(APDS9960_ATIME, v);
     }
 
-    function read8(cmd: number): number {
+    function read_buf_8(cmd: number): number {
         let i2cbuf = pins.i2cReadBuffer(APDS9960_ADDRESS, pins.sizeOf(NumberFormat.UInt8BE) * 7, false)
         let result = i2cbuf[0] << 8;
         result |= i2cbuf[1];
@@ -112,10 +112,10 @@ namespace APDS9960 {
 
     }
 
-    function read16(cmd: number): number {
+    function read_buf_16(cmd: number): number {
         let i2cbuf = pins.i2cReadBuffer(APDS9960_ADDRESS, pins.sizeOf(NumberFormat.UInt16LE) * 7, false)
-        let result = i2cbuf[1] << 8;
-        result |= i2cbuf[0];
+        let result = i2cbuf[0] << 8;
+        result |= i2cbuf[1];
         //basic.pause(10)
         return result
     }
@@ -149,7 +149,7 @@ namespace APDS9960 {
     //% weight=81 blockGap=8
     export function PowerOn() {
         let t = getReg(APDS9960_ENABLE)
-        t |= 1
+        t |= 0b00000001
         setReg(APDS9960_ENABLE, t)
         basic.pause(3)
     }
@@ -174,7 +174,7 @@ namespace APDS9960 {
     export function ALSEnable(en: boolean = true) {
         let t = getReg(APDS9960_ENABLE)
         //t &= 0xFC
-        if (en) t |= 2
+        if (en) t |= 0b00000010
         setReg(APDS9960_ENABLE, t)
     }
     //% blockId="APDS9960_WAIT_ENABLE" block="wait Enable %en"
@@ -182,7 +182,7 @@ namespace APDS9960 {
     export function WaitEnable(en: boolean = true) {
         let t = getReg(APDS9960_ENABLE)
         //t &= 0xF7
-        if (en) t |= 5
+        if (en) t |= 0b00001000
         setReg(APDS9960_ENABLE, t)
     }
     /**
@@ -191,10 +191,11 @@ namespace APDS9960 {
     //% blockId="APDS9930_GET_ALS" block="get ALS"
     //% weight=201 blockGap=8
     export function getALS(): number {
-        let r = read16(APDS9960_RDATAL);
-        let g = read16(APDS9960_GDATAL);
-        let b = read16(APDS9960_BDATAL);
-        let c = read16(APDS9960_CDATAL);
+
+        let r = get2Reg(APDS9960_RDATAL);
+        let g = get2Reg(APDS9960_GDATAL);
+        let b = get2Reg(APDS9960_BDATAL);
+        let c = get2Reg(APDS9960_CDATAL);
         /* This only uses RGB ... how can we integrate clear or calculate lux */
         /* based exclusively on clear since this might be more reliable?      */
         let illuminance = (-0.32466 * r) + (1.57837 * g) + (-0.73191 * b);
@@ -213,7 +214,7 @@ namespace APDS9960 {
         setReg(APDS9960_WTIME, 0xFF)
         setReg(APDS9960_PERS, 0)
         setReg(APDS9960_CONFIG1, 0X40)
-        //setReg(APDS9960_CONTROL, )
+        //setReg(APDS9960_CONTROL,0)
         basic.pause(3)
         ALSEnable()
         PowerOn()
