@@ -208,7 +208,7 @@ namespace APDS9960 {
         /* This only uses RGB ... how can we integrate clear or calculate lux */
         /* based exclusively on clear since this might be more reliable?      */
         let illuminance = (-0.32466 * r) + (1.57837 * g) + (-0.73191 * b);
-        return illuminance;
+        return g;
     }
 
     /**
