@@ -107,16 +107,16 @@ namespace APDS9960 {
         let i2cbuf = pins.i2cReadBuffer(APDS9960_ADDRESS, pins.sizeOf(NumberFormat.UInt8BE) * 7, false)
         let result = i2cbuf[0] << 8;
         result |= i2cbuf[1];
-        basic.pause(10)
+        //basic.pause(10)
         return result
 
     }
 
     function read16(cmd: number): number {
-        let i2cbuf = pins.i2cReadBuffer(APDS9960_ADDRESS, pins.sizeOf(NumberFormat.UInt16BE) * 15, false)
-        let result = i2cbuf[0] << 16;
-        result |= i2cbuf[1];
-        basic.pause(10)
+        let i2cbuf = pins.i2cReadBuffer(APDS9960_ADDRESS, pins.sizeOf(NumberFormat.UInt16LE) * 7, false)
+        let result = i2cbuf[1] << 8;
+        result |= i2cbuf[0];
+        //basic.pause(10)
         return result
     }
     /**
@@ -198,7 +198,7 @@ namespace APDS9960 {
         /* This only uses RGB ... how can we integrate clear or calculate lux */
         /* based exclusively on clear since this might be more reliable?      */
         let illuminance = (-0.32466 * r) + (1.57837 * g) + (-0.73191 * b);
-        return illuminance;
+        return r;
     }
 
     /**
