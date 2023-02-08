@@ -75,7 +75,7 @@ namespace APDS9960 {
       */
     function setReg(reg: number, dat: number): void {
         let _wbuf = pins.createBuffer(2);
-        _wbuf[0] = reg | 0xFF;
+        _wbuf[0] = reg | 0xA0;
         _wbuf[1] = dat;
         pins.i2cWriteBuffer(APDS9960_ADDRESS, _wbuf);
     }
@@ -92,8 +92,8 @@ namespace APDS9960 {
      * get two reg, UInt16LE format
      */
     function get2Reg(reg: number): number {
-        //pins.i2cWriteNumber(APDS9960_ADDRESS, reg, NumberFormat.UInt8BE);
-        return pins.i2cReadNumber(reg, NumberFormat.UInt16LE);
+        pins.i2cWriteNumber(APDS9960_ADDRESS, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(APDS9960_ADDRESS, NumberFormat.UInt16LE);
     }
 
     /**
@@ -126,7 +126,7 @@ namespace APDS9960 {
     //% weight=100 blockGap=8
     export function AGAIN(gain: APDS9960_AGAIN) {
         let t = getReg(APDS9960_CONTROL)
-        //t &= 0x03
+        t &= 0xff
         switch (gain) {
             case APDS9960_AGAIN.AGAIN_8:
                 t |= 1;
