@@ -102,7 +102,7 @@ namespace APDS9960 {
      */
     function get2Reg(reg: number): number {
         pins.i2cWriteNumber(APDS9960_ADDRESS, reg, NumberFormat.UInt8BE);
-        return pins.i2cReadNumber(APDS9960_ADDRESS, NumberFormat.UInt16LE);
+        return pins.i2cReadNumber(APDS9960_ADDRESS, NumberFormat.UInt16BE);
     }
 
     /**
@@ -182,16 +182,16 @@ namespace APDS9960 {
     //% weight=120 blockGap=8
     export function ALSEnable(en: boolean = true) {
         let t = getReg(APDS9960_ENABLE)
-        //t &= 0xFC
-        if (en) t |= 0b00000010
+        t &= 0b00000010
+        if (en) t |= 2
         setReg(APDS9960_ENABLE, t)
     }
     //% blockId="APDS9960_WAIT_ENABLE" block="wait Enable %en"
     //% weight=120 blockGap=8
     export function WaitEnable(en: boolean = true) {
         let t = getReg(APDS9960_ENABLE)
-        //t &= 0xF7
-        if (en) t |= 0b00001000
+        t &= 0b00001000
+        if (en) t |= 4
         setReg(APDS9960_ENABLE, t)
     }
     /**
@@ -200,11 +200,11 @@ namespace APDS9960 {
     //% blockId="APDS9930_GET_ALS" block="get ALS"
     //% weight=201 blockGap=8
     export function getALS(): number {
-
-        let r = read_buf_16(set2Reg(APDS9960_RDATAL));
-        let g = read_buf_16(set2Reg(APDS9960_GDATAL));
-        let b = read_buf_16(set2Reg(APDS9960_BDATAL));
-        let c = read_buf_16(set2Reg(APDS9960_CDATAL));
+        
+        let r = getReg(APDS9960_RDATAL);
+        let g = getReg(APDS9960_GDATAL);
+        let b = getReg(APDS9960_BDATAL);
+        let c = getReg(APDS9960_CDATAL);
         /* This only uses RGB ... how can we integrate clear or calculate lux */
         /* based exclusively on clear since this might be more reliable?      */
         let illuminance = (-0.32466 * r) + (1.57837 * g) + (-0.73191 * b);
