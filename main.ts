@@ -70,6 +70,15 @@ enum APDS9960_AGAIN {
 namespace APDS9960 {
     
     let _AGAIN = 1;
+
+    function set2Reg(command: number) {
+        let buf = pins.createBuffer(2);
+        // basic.pause(10)
+        // basic.pause(10)
+        buf[0] = command >> 8
+        buf[1] = command & 0xFF
+        return pins.i2cWriteBuffer(APDS9960_ADDRESS, buf)
+    }
     /**
       * set APDS9930's reg
       */
@@ -192,10 +201,10 @@ namespace APDS9960 {
     //% weight=201 blockGap=8
     export function getALS(): number {
 
-        let r = get2Reg(APDS9960_RDATAL);
-        let g = get2Reg(APDS9960_GDATAL);
-        let b = get2Reg(APDS9960_BDATAL);
-        let c = get2Reg(APDS9960_CDATAL);
+        let r = read_buf_16(set2Reg(APDS9960_RDATAL));
+        let g = read_buf_16(set2Reg(APDS9960_GDATAL));
+        let b = read_buf_16(set2Reg(APDS9960_BDATAL));
+        let c = read_buf_16(set2Reg(APDS9960_CDATAL));
         /* This only uses RGB ... how can we integrate clear or calculate lux */
         /* based exclusively on clear since this might be more reliable?      */
         let illuminance = (-0.32466 * r) + (1.57837 * g) + (-0.73191 * b);
